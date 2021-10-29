@@ -1,0 +1,294 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<title>CO2 - the control knob?</title>
+<meta name="generator" content="Bluefish 2.2.5" >
+<meta name="author" content="Boris" >
+<meta name="date" content="2019-08-24T08:15:10+0100" >
+<meta name="copyright" content="">
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8">
+<meta http-equiv="content-style-type" content="text/css">
+<meta http-equiv="expires" content="0">
+<meta >
+<!-- https://www.cssscript.com/canvas-javascript-knob-dial-component/ -->
+<script src="dist/pureknob.js"></script>
+
+<!--	https://www.jqueryscript.net/chart-graph/Canvas-Based-Temperature-Gauge-Plugin-For-jQuery-TempGauge.html#google_vignette-->
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="jquery.tempgauge.js"></script>
+
+
+<style>
+.Header {
+	width: 100%;
+	height: 5%;
+	font-size: 20px;
+	text-align: center;
+	box-sizing: border-box;
+	border: none;
+	background-color:rgb(127,127,127)
+}
+.Bounding_box {
+	position:relative;
+	width:600px;
+	height:400px;
+	border:1px solid black;
+ 	padding: 10px 10px 10px 10px;
+	background-color:rgb(127,127,127)
+	}
+.Display {
+	width: 100%;
+	height: 70%;
+	box-sizing: border-box;
+	border: none;
+}
+.img_box {
+	width: 80%;
+	height: 280px;
+	box-sizing: border-box;
+	border: none;
+}
+.Temp_box {
+   	width: 20%;
+   	height: 280px;
+	box-sizing: border-box;
+	float: right;
+	border: none;
+	background-color:rgb(127,127,127)
+}
+.Temp_top {
+	width: 100%;
+	height: 20%;
+	box-sizing: border-box;
+	float: right;
+	border: none;
+	background-color:rgb(127,127,127)
+}
+.Gauge_1 {
+	margin-left:auto;
+	margin-right:auto;
+	transform: rotate(270deg) translateX(-50px);
+}
+.Value_box {
+	width: 100px;
+	vertical-align: bottom;
+}
+.Footer {
+	width: 80%;
+	height: 25%;
+	box-sizing: border-box;
+	display: flex;
+	justify-content: center;
+	border: none;
+	background-color:rgb(127,127,127)
+
+}
+.Knob_style {
+	margin-left: auto;
+	margin-right: auto;
+	width:80%;
+}
+.Knob_container	{
+	display: flex;
+ 	flex-direction: column;
+	align-items: center;
+	justify-content: space-around;
+	width:20%;
+	height:100%;
+}    
+</style>
+
+<style>
+.Demo rect { fill: #57C7B6; }
+
+.Demo g polygon { opacity: 1; }
+
+.Demo circle {
+  fill: #256058;
+  stroke: #57C7B6;
+  stroke-width: 2;
+  filter: url(#dropshadow);
+}
+
+.Demo text {
+  font-size: 10px;
+  fill: #57C7B6;
+  font-family: sans-serif;
+  font-weight: 300;
+  -webkit-transition: all .1s ease-in-out;
+}
+
+.Demo text.active {
+  font-size: 15px;
+  -webkit-transition: all .3s ease-in-out;
+}
+</style>
+
+</head>
+
+<body style="font-family: Arial, Helvetica, sans-serif; font-size: 14px;">
+	<div id="Settings" class="Bounding_box">
+	<!-- Header -->
+	<div class="Header" id="header">CO<sub>2</sub> - The control knob?</div>
+	<!-- Central display area -->
+	<div class="Display" id="display">
+		<div class="Temp_box" name="RTemp">
+			<div class="Temp_top" name="TTop"></div>
+			<div class="tempGauge-demo" id="therm" display="flex" justify-content="center">14.0&deg;C</div>
+		</div>
+		<div class="img_box", id="cimg">
+			<iframe src="https://giphy.com/embed/16BRD8KGh20Eg" width="460" height="270" frameBorder="0" class="giphy-embed" ></iframe>
+			<p><a href="https://giphy.com/gifs/nasa-16BRD8KGh20Eg">via GIPHY</a></p>
+		</div>	
+	</div>
+	<!-- Footer -->
+	<div class="Footer">
+<!--		<div class = "Knob_container" >
+			<div id="KnobCH4" class=Knob_style"></div>
+			<div>CH<sub>4</sub> pptv</div>
+		</div>
+-->		<div class = "Knob_container" >
+			<div id="KnobCO2" class=Knob_style"></div>
+			<div>CO<sub>2</sub> ppmv</div>
+		</div>
+<!--		<div class = "Knob_container" >
+			<div id="KnobN2O" class=Knob_style"></div>
+			<div>N<sub>2</sub>O pptv</div>
+		</div>
+-->	</div>
+
+<!-- https://www.cssscript.com/canvas-javascript-knob-dial-component/ -->
+
+<!--<script type="text/javascript" language="javascript">
+          var oTherm = new jlionThermometer('thermometer2', 50, 'Global Temperature', 0, 100, true, false, 'S');
+     </script>-->
+
+<script>
+var CO2knob = pureknob.createKnob(80, 80);
+CO2knob.setProperty('angleStart', -0.8 * Math.PI);	//	value is in radians
+CO2knob.setProperty('angleEnd', 0.8 * Math.PI);
+CO2knob.setProperty('valMin', 200);
+CO2knob.setProperty('valMax', 1600);
+CO2knob.setProperty('val', 275);
+CO2knob.setProperty('colorBG', '#404040');
+CO2knob.setProperty('colorFG', '#00C0C0');
+CO2knob.setProperty('trackWidth', 0.4);	// Default is 0.4
+CO2knob.setProperty('textScale', 0.8);
+var node = CO2knob.node();
+var elem = document.getElementById('KnobCO2');
+elem.appendChild(node);
+
+var listener = function(CO2knob, value) {
+// 	Equation is from "Green Book.ods"
+ 	var tempC = (1.38243798139348 * Math.log(value)) + 6.21077323232093;
+//	alert("gauges = " + gauges.text());
+	$(".tempGauge-demo").updatePercentage(gaugeCanvas,tempC.toFixed(2));
+};
+CO2knob.addListener(listener);
+
+var CH4knob = pureknob.createKnob(50, 50);
+CH4knob.setProperty('angleStart', -0.8 * Math.PI);	//	value is in radians
+CH4knob.setProperty('angleEnd', 0.8 * Math.PI);
+CH4knob.setProperty('valMin', 850);
+CH4knob.setProperty('valMax', 4250);
+CH4knob.setProperty('val', 1700);
+CH4knob.setProperty('colorBG', '#404040');
+CH4knob.setProperty('colorFG', '#C0C000');
+CH4knob.setProperty('trackWidth', 0.4);	// Default is 0.4
+CH4knob.setProperty('textScale', 0.8);
+var CH4node = CH4knob.node();
+var CH4elem = document.getElementById('KnobCH4');
+//CH4elem.appendChild(CH4node);
+
+var N2Oknob = pureknob.createKnob(50, 50);
+N2Oknob.setProperty('angleStart', -0.8 * Math.PI);	//	value is in radians
+N2Oknob.setProperty('angleEnd', 0.8 * Math.PI);
+N2Oknob.setProperty('valMin', 160);
+N2Oknob.setProperty('valMax', 800);
+N2Oknob.setProperty('val', 320);
+N2Oknob.setProperty('colorBG', '#404040');
+N2Oknob.setProperty('colorFG', '#C000C0');
+N2Oknob.setProperty('trackWidth', 0.4);	// Default is 0.4
+N2Oknob.setProperty('textScale', 0.8);
+var N2Onode = N2Oknob.node();
+var N2Oelem = document.getElementById('KnobN2O');
+//N2Oelem.appendChild(N2Onode);
+
+// All available options specified
+var TgOpts = {borderColor:"black",borderWidth:2,defaultTemp:15,fillColor:"green",labelSize:12,labelColor:"black", maxTemp:20,minTemp:13,showLabel:true,width:80,showScale:false,replaceHtml: false};
+//
+var gaugeCanvas = $(".tempGauge-demo").tempGauge(TgOpts);
+
+$.fn.updatePercentage = function(canvas, value) {
+	var ctx = canvas[0].getContext("2d");
+	ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);	// Clear the existing canvas content
+//	calculate the new percentage setting of the thermometer
+	var fillPercent = (value - TgOpts.minTemp)/ (TgOpts.maxTemp - TgOpts.minTemp);
+	fillPercent = fillPercent > 1 ? 1 : fillPercent;
+	fillPercent = fillPercent < 0 ? 0 : fillPercent;
+//	alert("Therm PC = " + fillPercent);	
+	ctx.lineWidth = TgOpts.borderWidth;
+	ctx.strokeStyle = TgOpts.borderColor;
+	ctx.fillStyle = TgOpts.fillColor;
+	ctx.font = "bold " + TgOpts.labelSize + "px Arial ";
+	ctx.textAlign = "center";
+//	Fill
+	var padding = TgOpts.borderWidth;
+	drawTemperatureGauge(ctx, 5, (padding + padding), TgOpts.width, TgOpts.width * 2 - padding * 6, TgOpts.borderWidth, fillPercent);
+	ctx.fill();
+//	Stroke
+	drawTemperatureGauge(ctx, 5, (padding + padding), TgOpts.width, TgOpts.width * 2 - padding * 6, 0, 1);
+	ctx.stroke();
+//	draw label
+	ctx.fillStyle = TgOpts.labelColor;
+	ctx.fillText(value,canvas[0].width / 2, canvas[0].height - TgOpts.labelSize / 5)
+}
+// Copied from jquery.tempgauge.js
+function calculateDrawArgs(x, y, width, height, spacing, fillPercent){
+
+	var wholeCircle = Math.PI * 2;
+	var smallRadius = width / 3 / 2 - spacing;
+	var xSmall = x + width / 2;
+	var ySmall = y + smallRadius + spacing;
+			
+	var bigRadius = height / 6 - spacing;
+	var xBig = x + width / 2;
+	var yBig = y + height / 6 * 5;
+	
+	var offSet = Math.sqrt((Math.pow(bigRadius, 2) - Math.pow(smallRadius / 2, 2)), 2);
+	var twoThirdsLength = height / 6 * 5 - offSet - width / 3 / 2;
+
+	var gauge = twoThirdsLength * fillPercent;
+			
+	var yBox = yBig - offSet - gauge;
+	var xBox = xBig - width / 6 + spacing;
+	var sRad = Math.asin(smallRadius / bigRadius);
+
+	return {
+		small : {x : xSmall, y : ySmall, radius : smallRadius},
+		big : {x : xBig, y: yBig, radius : bigRadius},
+		box : {x : xBox, y : yBox},
+		offset : offSet,
+		gauge : gauge,
+		sRad : sRad,
+		wholeCircle : wholeCircle
+	};
+}
+function drawTemperatureGauge(ctx, x, y, width, height, spacing, fillPercent) {
+	var o = calculateDrawArgs(x, y, width, height, spacing, fillPercent);
+	ctx.beginPath();
+	ctx.arc(o.small.x, o.box.y, o.small.radius, 0, o.wholeCircle * -0.5, true);
+	ctx.arc(o.big.x, o.big.y, o.big.radius, o.wholeCircle * 0.75 - o.sRad, o.wholeCircle * -0.25 + o.sRad, true);
+	ctx.closePath();
+}
+		
+
+</script>
+
+  </body>
+</html>
