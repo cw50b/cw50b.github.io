@@ -246,7 +246,7 @@ $.fn.updatePercentage = function(canvas, value) {
 	ctx.stroke();
 //	draw label
 	ctx.fillStyle = TgOpts.labelColor;
-	ctx.fillText(value,canvas[0].width / 2, canvas[0].height - TgOpts.labelSize / 5)
+	ctx.fillText(value + "°C",canvas[0].width / 2, canvas[0].height - TgOpts.labelSize / 5)
 }
 // Copied from jquery.tempgauge.js
 function calculateDrawArgs(x, y, width, height, spacing, fillPercent){
