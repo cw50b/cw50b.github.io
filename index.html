@@ -24,15 +24,6 @@
 
 
 <style>
-.Header {
-	width: 100%;
-	height: 5%;
-	font-size: 20px;
-	text-align: center;
-	box-sizing: border-box;
-	border: none;
-	background-color:rgb(127,127,127)
-}
 .Bounding_box {
 	position:relative;
 	width:600px;
@@ -41,31 +32,59 @@
  	padding: 10px 10px 10px 10px;
 	background-color:rgb(127,127,127)
 	}
+.Header {
+	width: 100%;
+	height: 6%;
+	font-size: 18px;
+	text-align: center;
+	box-sizing: border-box;
+	border: none;
+	background-color:rgb(127,127,127)
+}
 .Display {
 	width: 100%;
 	height: 70%;
-	box-sizing: border-box;
+	display: flex;
+ 	flex-direction: row;
+	align-items: center;
+	justify-content: space-around;
 	border: none;
+	background-color:rgb(127,127,127)
+}
+.IPCC_box {
+   	width: 15%;
+   	height: 280px;
+	display: flex;
+ 	flex-direction: column;
+	justify-content: space-around;
+	border: none;
+	background-color:rgb(127,127,127)
 }
 .img_box {
-	width: 80%;
+	width: 70%;
 	height: 280px;
-	box-sizing: border-box;
+	display: flex;
+ 	flex-direction: column;
+	align-items: center;
+	justify-content: space-around;
 	border: none;
+	background-color:rgb(127,127,127)
 }
 .Temp_box {
-   	width: 20%;
+   	width: 15%;
    	height: 280px;
-	box-sizing: border-box;
-	float: right;
+	display: flex;
+ 	flex-direction: column;
+	align-items: center;
+	justify-content: space-around;
 	border: none;
 	background-color:rgb(127,127,127)
 }
 .Temp_top {
 	width: 100%;
-	height: 20%;
-	box-sizing: border-box;
-	float: right;
+	height: 10%;
+	display: flex;
+	justify-content: center;
 	border: none;
 	background-color:rgb(127,127,127)
 }
@@ -79,8 +98,8 @@
 	vertical-align: bottom;
 }
 .Footer {
-	width: 80%;
-	height: 25%;
+	width: 100%;
+	height: 24%;
 	box-sizing: border-box;
 	display: flex;
 	justify-content: center;
@@ -100,6 +119,7 @@
 	justify-content: space-around;
 	width:20%;
 	height:100%;
+	border: none
 }    
 </style>
 
@@ -134,17 +154,23 @@
 <body style="font-family: Arial, Helvetica, sans-serif; font-size: 14px;">
 	<div id="Settings" class="Bounding_box">
 	<!-- Header -->
-	<div class="Header" id="header">CO<sub>2</sub> - The control knob?</div>
+	<div class="Header" id="header">CO<sub>2</sub> - the control knob?</div>
 	<!-- Central display area -->
 	<div class="Display" id="display">
+		<div class="IPCC_box" name="IPCC">
+			<div class="Temp_top" name="TTop">IPCC<br>(RCP6.0)</div>
+			<div class="tempGauge-demo2" id="therm" display="flex" justify-content="center">14.0&deg;C</div>
+		</div>
+
+		<div class="img_box", id="cimg">
+			<iframe src="https://giphy.com/embed/16BRD8KGh20Eg" width="440" height="270" frameBorder="0" class="giphy-embed" ></iframe>
+			<p><a href="https://giphy.com/gifs/nasa-16BRD8KGh20Eg">via GIPHY</a></p>
+
+		</div>
 		<div class="Temp_box" name="RTemp">
-			<div class="Temp_top" name="TTop"></div>
+			<div class="Temp_top" name="TTop">NASA PSG</div>
 			<div class="tempGauge-demo" id="therm" display="flex" justify-content="center">14.0&deg;C</div>
 		</div>
-		<div class="img_box", id="cimg">
-			<iframe src="https://giphy.com/embed/16BRD8KGh20Eg" width="460" height="270" frameBorder="0" class="giphy-embed" ></iframe>
-			<p><a href="https://giphy.com/gifs/nasa-16BRD8KGh20Eg">via GIPHY</a></p>
-		</div>	
 	</div>
 	<!-- Footer -->
 	<div class="Footer">
@@ -172,7 +198,7 @@
 var CO2knob = pureknob.createKnob(80, 80);
 CO2knob.setProperty('angleStart', -0.8 * Math.PI);	//	value is in radians
 CO2knob.setProperty('angleEnd', 0.8 * Math.PI);
-CO2knob.setProperty('valMin', 200);
+CO2knob.setProperty('valMin', 275);
 CO2knob.setProperty('valMax', 1600);
 CO2knob.setProperty('val', 275);
 CO2knob.setProperty('colorBG', '#404040');
@@ -186,8 +212,11 @@ elem.appendChild(node);
 var listener = function(CO2knob, value) {
 // 	Equation is from "Green Book.ods"
  	var tempC = (1.38243798139348 * Math.log(value)) + 6.21077323232093;
+//	var tempRCP = 14 + ((value - 275) * 0.005);
+	var tempRCP = (3.06397091881101 * Math.log(value)) - 3.3052242624967;
 //	alert("gauges = " + gauges.text());
-	$(".tempGauge-demo").updatePercentage(gaugeCanvas,tempC.toFixed(2));
+	$(".tempGauge-demo").updatePercentage(TgOpts,gaugeCanvas,tempC.toFixed(2));
+	$(".tempGauge-demo2").updatePercentage(TgOpts2,gaugeCanvas2,tempRCP.toFixed(2));
 };
 CO2knob.addListener(listener);
 
@@ -221,10 +250,13 @@ var N2Oelem = document.getElementById('KnobN2O');
 
 // All available options specified
 var TgOpts = {borderColor:"black",borderWidth:2,defaultTemp:15,fillColor:"green",labelSize:12,labelColor:"black", maxTemp:20,minTemp:13,showLabel:true,width:80,showScale:false,replaceHtml: false};
+var TgOpts2 = {borderColor:"black",borderWidth:2,defaultTemp:15,fillColor:"red",labelSize:12,labelColor:"black", maxTemp:20,minTemp:13,showLabel:true,width:80,showScale:false,replaceHtml: false};
+
 //
 var gaugeCanvas = $(".tempGauge-demo").tempGauge(TgOpts);
+var gaugeCanvas2 = $(".tempGauge-demo2").tempGauge(TgOpts2);
 
-$.fn.updatePercentage = function(canvas, value) {
+$.fn.updatePercentage = function(TgOpts, canvas, value) {
 	var ctx = canvas[0].getContext("2d");
 	ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);	// Clear the existing canvas content
 //	calculate the new percentage setting of the thermometer
