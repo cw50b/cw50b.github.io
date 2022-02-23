@@ -203,7 +203,7 @@
 <script>
 //	H2O control knob
 var H2Oval = 80;
-var H2Oknob = pureknob.createKnob(80, 80);
+var H2Oknob = pureknob.createKnob(60, 60);
 H2Oknob.setProperty('angleStart', -0.8 * Math.PI);	//	value is in radians
 H2Oknob.setProperty('angleEnd', 0.8 * Math.PI);
 H2Oknob.setProperty('needle',true);
@@ -211,7 +211,7 @@ H2Oknob.setProperty('valMin', 40);
 H2Oknob.setProperty('valMax', 100);
 H2Oknob.setProperty('val', H2Oval);
 H2Oknob.setProperty('colorBG', '#404040');
-H2Oknob.setProperty('colorFG', '#00C0C0');
+H2Oknob.setProperty('colorFG', '#000080');
 H2Oknob.setProperty('trackWidth', 0.4);	// Default is 0.4
 H2Oknob.setProperty('textScale', 0.8);
 var node = H2Oknob.node();
@@ -245,8 +245,7 @@ var H2Olistener = function(H2Oknob, value) {
 	$(".tempGauge-demo").updatePercentage(TgOpts,gaugeCanvas,tempC.toFixed(2));
 //	reset IPCC temperature gauge
 	var tempRCP = (3.06397091881101 * Math.log(275)) - 3.3052242624967;
-	$(".tempGauge-demo2").updatePercentage(TgOpts2,gaugeCanvas2,tempRCP.toFixed(2));
-	
+	$(".tempGauge-demo2").updatePercentage(TgOpts2,gaugeCanvas2,tempRCP.toFixed(2));	
 };
 H2Oknob.addListener(H2Olistener);
 
