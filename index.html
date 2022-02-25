@@ -242,10 +242,10 @@ var H2Olistener = function(H2Oknob, value) {
 	CO2knob.setProperty('val', 275);
 //	reset NASA PSG temperature gauge
  	var tempC = (ka * Math.log(275)) + kb;
-	$(".tempGauge-demo").updatePercentage(TgOpts,gaugeCanvas,tempC.toFixed(2));
+	$(".tempGauge-demo").updatePercentage(TgOpts,gaugeCanvas,tempC.toFixed(1));
 //	reset IPCC temperature gauge
 	var tempRCP = (3.06397091881101 * Math.log(275)) - 3.3052242624967;
-	$(".tempGauge-demo2").updatePercentage(TgOpts2,gaugeCanvas2,tempRCP.toFixed(2));	
+	$(".tempGauge-demo2").updatePercentage(TgOpts2,gaugeCanvas2,tempRCP.toFixed(1));	
 };
 H2Oknob.addListener(H2Olistener);
 
@@ -272,8 +272,8 @@ var listener = function(CO2knob, value) {
 //	var tempRCP = 14 + ((value - 275) * 0.005);
 	var tempRCP = (3.06397091881101 * Math.log(value)) - 3.3052242624967;
 //	alert("gauges = " + gauges.text());
-	$(".tempGauge-demo").updatePercentage(TgOpts,gaugeCanvas,tempC.toFixed(2));
-	$(".tempGauge-demo2").updatePercentage(TgOpts2,gaugeCanvas2,tempRCP.toFixed(2));
+	$(".tempGauge-demo").updatePercentage(TgOpts,gaugeCanvas,tempC.toFixed(1));
+	$(".tempGauge-demo2").updatePercentage(TgOpts2,gaugeCanvas2,tempRCP.toFixed(1));
 };
 CO2knob.addListener(listener);
 
